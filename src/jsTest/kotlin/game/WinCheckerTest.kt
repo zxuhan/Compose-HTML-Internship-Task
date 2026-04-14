@@ -133,6 +133,21 @@ class WinCheckerTest {
     }
 
     @Test
+    fun connect10On15x15Board() {
+        val config = GameConfig(rows = 15, columns = 15, winLength = 10)
+        var state = GameState.initial(config)
+        // RED plays cols 0..9 (bottom row); YELLOW plays cols 0..8 (stacking)
+        for (i in 0..8) {
+            state = state.dropPiece(i) // RED bottom row
+            state = state.dropPiece(i) // YELLOW above
+        }
+        assertEquals(GameStatus.IN_PROGRESS, state.status)
+        state = state.dropPiece(9) // RED — 10 in a row across bottom
+        assertEquals(GameStatus.RED_WINS, state.status)
+        assertEquals(10, state.winningCells.size)
+    }
+
+    @Test
     fun winOnLargeBoard() {
         val config = GameConfig(rows = 10, columns = 10, winLength = 4)
         var state = GameState.initial(config)
