@@ -23,14 +23,14 @@ fun Controls(config: GameConfig, onNewGame: (GameConfig) -> Unit) {
         }
         Div(attrs = { classes(AppStyles.controlGroup) }) {
             Span(attrs = { classes(AppStyles.controlLabel) }) { Text("Connect") }
-            NumberInput(value = winLength, min = 3, max = 10) { winLength = it }
+            NumberInput(value = winLength, min = 4, max = 10) { winLength = it }
         }
         Button(attrs = {
             classes(AppStyles.newGameButton)
             onClick {
                 val r = rows.coerceIn(4, 15)
                 val c = cols.coerceIn(4, 15)
-                val w = winLength.coerceIn(3, minOf(10, r, c))
+                val w = winLength.coerceIn(4, minOf(10, r, c))
                 onNewGame(GameConfig(r, c, w))
             }
         }) { Text("New Game") }

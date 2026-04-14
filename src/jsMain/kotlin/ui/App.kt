@@ -14,7 +14,7 @@ fun App() {
     Style(AppStyles)
 
     val initialState = remember {
-        Storage.load()?.copy(lastMove = null) ?: GameState.initial()
+        Storage.load() ?: GameState.initial()
     }
     var gameState by remember { mutableStateOf(initialState) }
 

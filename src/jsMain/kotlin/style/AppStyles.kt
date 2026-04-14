@@ -17,6 +17,11 @@ object AppStyles : StyleSheet() {
     val title by style {
         property("font-size", "clamp(20px, 4vmin, 32px)")
         property("margin", "0 0 8px 0")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                property("font-size", "20px")
+            }
+        }
     }
 
     val board by style {
@@ -27,6 +32,11 @@ object AppStyles : StyleSheet() {
         property("border-radius", "clamp(4px, 1vmin, 10px)")
         property("width", "clamp(280px, min(90vw, 70vh), 700px)")
         overflow("hidden")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                property("padding", "4px")
+            }
+        }
     }
 
     val cell by style {
@@ -35,7 +45,8 @@ object AppStyles : StyleSheet() {
         alignItems(AlignItems.Center)
         justifyContent(JustifyContent.Center)
         property("cursor", "pointer")
-        property("min-width", "0")
+        property("min-width", "36px")
+        property("min-height", "36px")
     }
 
     val cellInner by style {
@@ -69,6 +80,15 @@ object AppStyles : StyleSheet() {
         justifyContent(JustifyContent.Center)
         property("padding", "clamp(6px, 1.5vmin, 12px)")
         property("margin-bottom", "clamp(6px, 1.5vmin, 12px)")
+        property("width", "100%")
+        property("max-width", "700px")
+        property("box-sizing", "border-box")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                flexDirection(FlexDirection.Column)
+                alignItems(AlignItems.Stretch)
+            }
+        }
     }
 
     val controlGroup by style {
@@ -76,6 +96,11 @@ object AppStyles : StyleSheet() {
         flexDirection(FlexDirection.Column)
         alignItems(AlignItems.Center)
         property("gap", "4px")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                property("width", "100%")
+            }
+        }
     }
 
     val controlLabel by style {
@@ -84,23 +109,37 @@ object AppStyles : StyleSheet() {
     }
 
     val controlInput by style {
-        property("width", "clamp(50px, 8vmin, 60px)")
-        padding(4.px)
-        property("font-size", "clamp(12px, 1.8vmin, 14px)")
+        property("width", "clamp(72px, 12vmin, 96px)")
+        property("min-height", "44px")
+        property("padding", "10px 18px")
+        property("font-size", "clamp(14px, 2.2vmin, 16px)")
         property("text-align", "center")
         borderRadius(4.px)
         border(1.px, LineStyle.Solid, Color("#ccc"))
+        property("box-sizing", "border-box")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                property("width", "100%")
+            }
+        }
     }
 
     val newGameButton by style {
-        property("padding", "8px 16px")
-        property("font-size", "clamp(14px, 2vmin, 16px)")
+        property("min-height", "44px")
+        property("padding", "10px 18px")
+        property("font-size", "clamp(14px, 2.2vmin, 16px)")
         property("font-weight", "bold")
         backgroundColor(Color("#2ecc71"))
         color(Color.white)
         property("border", "none")
         borderRadius(6.px)
         property("cursor", "pointer")
+        property("box-sizing", "border-box")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                property("width", "100%")
+            }
+        }
     }
 
     val statusBar by style {
@@ -125,7 +164,7 @@ object AppStyles : StyleSheet() {
     }
 
     val dropKeyframes by keyframes {
-        from { property("transform", "translateY(-500px)") }
+        from { property("transform", "translateY(-100%)") }
         to { property("transform", "translateY(0)") }
     }
 
