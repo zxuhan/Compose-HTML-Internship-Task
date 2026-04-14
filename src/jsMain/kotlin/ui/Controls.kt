@@ -29,6 +29,7 @@ fun Controls(
             onClick {
                 val r = rows.coerceIn(4, 15)
                 val c = cols.coerceIn(4, 15)
+                // Max achievable line in any direction (horizontal, vertical, diagonal) is minOf(r, c).
                 val w = winLength.coerceIn(4, minOf(10, r, c))
                 onNewGame(GameConfig(r, c, w))
             }

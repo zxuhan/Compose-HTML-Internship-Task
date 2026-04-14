@@ -2,7 +2,11 @@
 
 A Kotlin/JS Connect Four built on Compose HTML — immutable state core, O(k) direction-vector win detection, CSS-animation-driven feedback, zero UI libraries beyond Compose HTML itself.
 
-**Stack:** Kotlin 2.1.10 · Compose HTML 1.7.3 · Gradle Kotlin DSL · `kotlin.test` + Karma/Chrome Headless.
+![Kotlin](https://img.shields.io/badge/Kotlin-2.1.10-7F52FF?logo=kotlin&logoColor=white)
+![Compose HTML](https://img.shields.io/badge/Compose%20HTML-1.7.3-4285F4?logo=jetpackcompose&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-Kotlin%20DSL-02303A?logo=gradle&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-30%20passing-2ECC71)
+![Platform](https://img.shields.io/badge/target-Kotlin%2FJS%20IR-F18E33)
 
 ## Run
 
@@ -29,7 +33,7 @@ Requires JDK 17+.
 - `Enter` / `Space` — drop in the focused column.
 - `1`–`9`, `0` — jump to columns 1–10. On boards wider than 10 columns, use the arrow keys to reach columns 11+.
 
-## Architecture at a glance
+## Architecture
 
 - **State flow.** `App` owns `mutableStateOf<GameState>`; children receive `state + callbacks`; `Storage.save()` fires only when the board reference changes.
 - **Rendering is a pure function of state.** CSS keyframes drive drop / pulse / shake — no JS animation loop, no imperative DOM mutation.
@@ -61,10 +65,3 @@ src/jsTest/kotlin/
 - `GameStateTest` — gravity, stacking, full-column rejection, alternation, undo, post-game-over rejection.
 - `WinCheckerTest` — 4 directions, Connect 5/6/10, 15×15 board, impossible-win → DRAW.
 - `StorageTest` — round-trip, corrupt JSON → `null` + auto-clear, out-of-range config → `null`, dimension mismatch → `null`.
-
-## Not implemented (by design)
-
-- No AI / single-player mode — task brief is local two-player.
-- No online multiplayer, no rooms, no spectator.
-- No move-history list beyond undo.
-- No theming / sound / haptics.
