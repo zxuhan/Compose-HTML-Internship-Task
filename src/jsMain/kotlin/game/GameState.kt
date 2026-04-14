@@ -26,13 +26,14 @@ data class GameState(
     val status: GameStatus,
     val winningCells: List<Pair<Int, Int>>,
     val lastMove: Pair<Int, Int>? = null,
+    val rejectedColumn: Int? = null,
     val previous: GameState? = null
 ) {
     fun dropPiece(col: Int): GameState {
-        if (status != GameStatus.IN_PROGRESS) return this
-        if (col < 0 || col >= config.columns) return this
+        if (status != GameStatus.IN_PROGRESS) return reject(col)
+        if (col < 0 || col >= config.columns) return reject(col)
 
-        val targetRow = findLowestEmptyRow(col) ?: return this
+        val targetRow = findLowestEmptyRow(col) ?: return reject(col)
 
         val newBoard = board.mapIndexed { r, row ->
             if (r == targetRow) {
@@ -57,9 +58,13 @@ data class GameState(
             status = newStatus,
             winningCells = winCells,
             lastMove = targetRow to col,
-            previous = this
+            rejectedColumn = null,
+            previous = this.copy(rejectedColumn = null)
         )
     }
+
+    private fun reject(col: Int): GameState =
+        if (rejectedColumn == col) this else copy(rejectedColumn = col)
 
     fun undo(): GameState = previous ?: this
 

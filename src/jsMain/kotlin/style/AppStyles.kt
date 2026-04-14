@@ -106,9 +106,43 @@ object AppStyles : StyleSheet() {
         property("cursor", "not-allowed")
     }
 
+    val pulseKeyframes by keyframes {
+        0.percent { property("transform", "scale(1)") }
+        50.percent { property("transform", "scale(1.08)") }
+        100.percent { property("transform", "scale(1)") }
+    }
+
+    val shakeKeyframes by keyframes {
+        0.percent { property("transform", "translateX(0)") }
+        25.percent { property("transform", "translateX(-4px)") }
+        50.percent { property("transform", "translateX(4px)") }
+        75.percent { property("transform", "translateX(-4px)") }
+        100.percent { property("transform", "translateX(0)") }
+    }
+
     val cellWinning by style {
         property("box-shadow", "0 0 12px 4px rgba(255, 255, 255, 0.8)")
         border(2.px, LineStyle.Solid, Color("#fff"))
+        animation(pulseKeyframes) {
+            duration(1.2.s)
+            timingFunction(AnimationTimingFunction.EaseInOut)
+            iterationCount(null)
+        }
+    }
+
+    val cellShake by style {
+        animation(shakeKeyframes) {
+            duration(0.4.s)
+            timingFunction(AnimationTimingFunction.EaseInOut)
+        }
+    }
+
+    val controlInputInvalid by style {
+        border(2.px, LineStyle.Solid, Color("#e74c3c"))
+        animation(shakeKeyframes) {
+            duration(0.4.s)
+            timingFunction(AnimationTimingFunction.EaseInOut)
+        }
     }
 
     val controlsPanel by style {

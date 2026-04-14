@@ -67,7 +67,13 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
             for (col in 0 until state.config.columns) {
                 val shouldAnimate = state.lastMove == (row to col)
                 val ghost = if (showGhost && previewColumn == col && previewLandingRow == row) state.currentPlayer else null
-                key(row, col, if (shouldAnimate) state.board[row][col]?.name else "static") {
+                val shake = state.rejectedColumn == col
+                val keyToken = when {
+                    shouldAnimate -> state.board[row][col]?.name ?: "anim"
+                    shake -> "shake-${state.rejectedColumn}"
+                    else -> "static"
+                }
+                key(row, col, keyToken) {
                     Cell(
                         row = row,
                         col = col,
@@ -75,6 +81,7 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
                         isWinning = (row to col) in state.winningCells,
                         animate = shouldAnimate,
                         ghostPlayer = ghost,
+                        shake = shake,
                         onClick = { onColumnClick(col) },
                         onHover = { hovered = col }
                     )

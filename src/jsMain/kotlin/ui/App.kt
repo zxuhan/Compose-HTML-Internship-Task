@@ -40,8 +40,8 @@ fun App() {
             state = gameState,
             onColumnClick = { col ->
                 val newState = gameState.dropPiece(col)
-                if (newState != gameState) {
-                    Storage.save(newState)
+                if (newState !== gameState) {
+                    if (newState.board !== gameState.board) Storage.save(newState)
                     gameState = newState
                 }
             }

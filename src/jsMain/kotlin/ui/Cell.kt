@@ -15,6 +15,7 @@ fun Cell(
     isWinning: Boolean,
     animate: Boolean,
     ghostPlayer: Player? = null,
+    shake: Boolean = false,
     onClick: () -> Unit,
     onHover: (() -> Unit)? = null
 ) {
@@ -27,6 +28,7 @@ fun Cell(
     val displayed = player ?: ghostPlayer
     Div(attrs = {
         classes(AppStyles.cell)
+        if (shake) classes(AppStyles.cellShake)
         attr("role", "gridcell")
         attr("aria-label", "row ${row + 1} column ${col + 1} $stateLabel")
         onClick { onClick() }

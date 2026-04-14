@@ -52,18 +52,33 @@ private fun LabeledInput(
     max: Int,
     onValueChange: (Int) -> Unit
 ) {
+    var invalid by remember { mutableStateOf(false) }
+    var shakeTick by remember { mutableStateOf(0) }
     Div(attrs = { classes(AppStyles.controlGroup) }) {
         Span(attrs = { classes(AppStyles.controlLabel) }) { Text(label) }
-        Input(InputType.Number, attrs = {
-            classes(AppStyles.controlInput)
-            value(value)
-            attr("min", min.toString())
-            attr("max", max.toString())
-            attr("aria-label", ariaLabel)
-            onInput { event ->
-                event.value?.toInt()?.let { onValueChange(it.coerceIn(min, max)) }
-            }
-        })
+        key(shakeTick) {
+            Input(InputType.Number, attrs = {
+                classes(AppStyles.controlInput)
+                if (invalid) classes(AppStyles.controlInputInvalid)
+                value(value)
+                attr("min", min.toString())
+                attr("max", max.toString())
+                attr("aria-label", ariaLabel)
+                onInput { event ->
+                    val raw = event.value?.toInt()
+                    if (raw != null) {
+                        val coerced = raw.coerceIn(min, max)
+                        if (raw != coerced) {
+                            invalid = true
+                            shakeTick++
+                        } else {
+                            invalid = false
+                        }
+                        onValueChange(coerced)
+                    }
+                }
+            })
+        }
         Span(attrs = { classes(AppStyles.controlHint) }) { Text(hint) }
     }
 }
