@@ -36,6 +36,7 @@ fun App() {
             }
         )
         StatusBar(state = gameState)
+        MoveAnnouncer(state = gameState)
         Board(
             state = gameState,
             onColumnClick = { col ->

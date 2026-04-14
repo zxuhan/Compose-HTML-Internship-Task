@@ -20,15 +20,24 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
     val maxCol = state.config.columns - 1
     if (cursor > maxCol) cursor = maxCol
 
+    remember(state.lastMove) {
+        state.lastMove?.let { (_, col) -> if (col in 0..maxCol) cursor = col }
+        Unit
+    }
+
     val previewColumn = hovered ?: if (focused) cursor else null
     val previewLandingRow = previewColumn?.let { state.landingRow(it) }
     val showGhost = state.status == GameStatus.IN_PROGRESS && previewColumn != null && previewLandingRow != null
 
     Div(attrs = {
         classes(AppStyles.board)
+        if (focused) classes(AppStyles.boardFocused)
         attr("tabindex", "0")
         attr("role", "grid")
-        attr("aria-label", "Connect Four board")
+        attr(
+            "aria-label",
+            "Connect Four board, ${state.config.rows} rows by ${state.config.columns} columns, Connect ${state.config.winLength}"
+        )
         style {
             property("grid-template-columns", "repeat(${state.config.columns}, 1fr)")
         }

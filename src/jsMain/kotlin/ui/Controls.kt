@@ -37,6 +37,8 @@ fun Controls(
             classes(AppStyles.undoButton)
             if (!canUndo) classes(AppStyles.undoDisabled)
             if (!canUndo) attr("disabled", "true")
+            attr("title", "Undo last move (can undo repeatedly)")
+            attr("aria-label", "Undo last move")
             onClick { if (canUndo) onUndo() }
         }) { Text("Undo") }
     }

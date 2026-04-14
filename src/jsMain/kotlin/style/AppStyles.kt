@@ -252,4 +252,22 @@ object AppStyles : StyleSheet() {
             timingFunction(AnimationTimingFunction.EaseIn)
         }
     }
+
+    val visuallyHidden by style {
+        position(Position.Absolute)
+        width(1.px)
+        height(1.px)
+        property("clip", "rect(0 0 0 0)")
+        property("clip-path", "inset(50%)")
+        overflow("hidden")
+        property("white-space", "nowrap")
+        property("margin", "-1px")
+        property("padding", "0")
+        property("border", "0")
+    }
+
+    val boardFocused by style {
+        property("outline", "3px solid rgba(255, 255, 255, 0.7)")
+        property("outline-offset", "2px")
+    }
 }

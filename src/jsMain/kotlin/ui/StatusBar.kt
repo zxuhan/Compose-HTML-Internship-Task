@@ -29,3 +29,24 @@ fun StatusBar(state: GameState) {
         Text("$text — Moves: ${state.moveCount()}")
     }
 }
+
+@Composable
+fun MoveAnnouncer(state: GameState) {
+    val message = when (state.status) {
+        GameStatus.RED_WINS -> "Red wins with ${state.winningCells.size} in a row."
+        GameStatus.YELLOW_WINS -> "Yellow wins with ${state.winningCells.size} in a row."
+        GameStatus.DRAW -> "Game ended in a draw."
+        GameStatus.IN_PROGRESS -> state.lastMove?.let { (row, col) ->
+            val mover = if (state.currentPlayer == Player.RED) "Yellow" else "Red"
+            "$mover dropped in column ${col + 1}, row ${row + 1}."
+        } ?: ""
+    }
+    Div(attrs = {
+        classes(AppStyles.visuallyHidden)
+        attr("role", "status")
+        attr("aria-live", "polite")
+        attr("aria-atomic", "true")
+    }) {
+        Text(message)
+    }
+}

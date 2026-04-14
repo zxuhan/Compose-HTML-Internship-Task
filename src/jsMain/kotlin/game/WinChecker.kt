@@ -2,6 +2,7 @@ package game
 
 object WinChecker {
 
+    // Four axes; each walks forward + backward from the placed piece, covering all 8 compass directions.
     private val directions = listOf(
         0 to 1,   // horizontal
         1 to 0,   // vertical
