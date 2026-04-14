@@ -21,7 +21,11 @@ fun StatusBar(state: GameState) {
         GameStatus.DRAW -> "It's a Draw!" to AppStyles.statusDraw
     }
 
-    Div(attrs = { classes(AppStyles.statusBar, colorClass) }) {
+    Div(attrs = {
+        classes(AppStyles.statusBar, colorClass)
+        attr("role", "status")
+        attr("aria-live", "polite")
+    }) {
         Text(text)
     }
 }

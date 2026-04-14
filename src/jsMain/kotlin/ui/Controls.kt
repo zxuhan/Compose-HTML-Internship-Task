@@ -13,18 +13,12 @@ fun Controls(config: GameConfig, onNewGame: (GameConfig) -> Unit) {
     var winLength by remember(config) { mutableStateOf(config.winLength) }
 
     Div(attrs = { classes(AppStyles.controlsPanel) }) {
-        Div(attrs = { classes(AppStyles.controlGroup) }) {
-            Span(attrs = { classes(AppStyles.controlLabel) }) { Text("Rows") }
-            NumberInput(value = rows, min = 4, max = 15) { rows = it }
-        }
-        Div(attrs = { classes(AppStyles.controlGroup) }) {
-            Span(attrs = { classes(AppStyles.controlLabel) }) { Text("Columns") }
-            NumberInput(value = cols, min = 4, max = 15) { cols = it }
-        }
-        Div(attrs = { classes(AppStyles.controlGroup) }) {
-            Span(attrs = { classes(AppStyles.controlLabel) }) { Text("Connect") }
-            NumberInput(value = winLength, min = 4, max = 10) { winLength = it }
-        }
+        LabeledInput(label = "Rows", ariaLabel = "Rows (4 to 15)", hint = "4–15",
+            value = rows, min = 4, max = 15) { rows = it }
+        LabeledInput(label = "Columns", ariaLabel = "Columns (4 to 15)", hint = "4–15",
+            value = cols, min = 4, max = 15) { cols = it }
+        LabeledInput(label = "Connect", ariaLabel = "Connect length (4 to 10)", hint = "4–10",
+            value = winLength, min = 4, max = 10) { winLength = it }
         Button(attrs = {
             classes(AppStyles.newGameButton)
             onClick {
@@ -38,14 +32,27 @@ fun Controls(config: GameConfig, onNewGame: (GameConfig) -> Unit) {
 }
 
 @Composable
-private fun NumberInput(value: Int, min: Int, max: Int, onValueChange: (Int) -> Unit) {
-    Input(InputType.Number, attrs = {
-        classes(AppStyles.controlInput)
-        value(value)
-        attr("min", min.toString())
-        attr("max", max.toString())
-        onInput { event ->
-            event.value?.toInt()?.let { onValueChange(it.coerceIn(min, max)) }
-        }
-    })
+private fun LabeledInput(
+    label: String,
+    ariaLabel: String,
+    hint: String,
+    value: Int,
+    min: Int,
+    max: Int,
+    onValueChange: (Int) -> Unit
+) {
+    Div(attrs = { classes(AppStyles.controlGroup) }) {
+        Span(attrs = { classes(AppStyles.controlLabel) }) { Text(label) }
+        Input(InputType.Number, attrs = {
+            classes(AppStyles.controlInput)
+            value(value)
+            attr("min", min.toString())
+            attr("max", max.toString())
+            attr("aria-label", ariaLabel)
+            onInput { event ->
+                event.value?.toInt()?.let { onValueChange(it.coerceIn(min, max)) }
+            }
+        })
+        Span(attrs = { classes(AppStyles.controlHint) }) { Text(hint) }
+    }
 }

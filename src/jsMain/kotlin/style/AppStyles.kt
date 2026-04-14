@@ -53,18 +53,30 @@ object AppStyles : StyleSheet() {
         width(85.percent)
         height(85.percent)
         borderRadius(50.percent)
+        display(DisplayStyle.Flex)
+        alignItems(AlignItems.Center)
+        justifyContent(JustifyContent.Center)
     }
 
     val cellRed by style {
         backgroundColor(Color("#e74c3c"))
+        color(Color.white)
     }
 
     val cellYellow by style {
         backgroundColor(Color("#f39c12"))
+        color(Color("#1a1a1a"))
     }
 
     val cellEmpty by style {
         backgroundColor(Color("#ecf0f1"))
+    }
+
+    val cellGlyph by style {
+        property("font-size", "clamp(16px, 4vmin, 32px)")
+        property("font-weight", "bold")
+        property("line-height", "1")
+        property("user-select", "none")
     }
 
     val cellWinning by style {
@@ -106,6 +118,11 @@ object AppStyles : StyleSheet() {
     val controlLabel by style {
         property("font-size", "clamp(12px, 1.8vmin, 14px)")
         property("font-weight", "bold")
+    }
+
+    val controlHint by style {
+        property("font-size", "clamp(10px, 1.5vmin, 12px)")
+        color(Color("#7f8c8d"))
     }
 
     val controlInput by style {
