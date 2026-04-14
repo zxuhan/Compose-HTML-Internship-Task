@@ -22,9 +22,17 @@ fun App() {
         H1(attrs = { classes(AppStyles.title) }) { Text("Connect Four") }
         Controls(
             config = gameState.config,
+            canUndo = gameState.previous != null,
             onNewGame = { newConfig ->
                 Storage.clear()
                 gameState = GameState.initial(newConfig)
+            },
+            onUndo = {
+                val reverted = gameState.undo()
+                if (reverted !== gameState) {
+                    Storage.save(reverted)
+                    gameState = reverted
+                }
             }
         )
         StatusBar(state = gameState)

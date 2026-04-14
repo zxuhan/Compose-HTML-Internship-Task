@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import game.GameState
+import game.GameStatus
 import org.jetbrains.compose.web.css.style
 import org.jetbrains.compose.web.dom.Div
 import style.AppStyles
@@ -14,8 +15,14 @@ import style.AppStyles
 @Composable
 fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
     var cursor by remember { mutableStateOf(0) }
+    var hovered by remember { mutableStateOf<Int?>(null) }
+    var focused by remember { mutableStateOf(false) }
     val maxCol = state.config.columns - 1
     if (cursor > maxCol) cursor = maxCol
+
+    val previewColumn = hovered ?: if (focused) cursor else null
+    val previewLandingRow = previewColumn?.let { state.landingRow(it) }
+    val showGhost = state.status == GameStatus.IN_PROGRESS && previewColumn != null && previewLandingRow != null
 
     Div(attrs = {
         classes(AppStyles.board)
@@ -25,6 +32,9 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
         style {
             property("grid-template-columns", "repeat(${state.config.columns}, 1fr)")
         }
+        onFocus { focused = true }
+        onBlur { focused = false }
+        onMouseLeave { hovered = null }
         onKeyDown { e ->
             when (val k = e.key) {
                 "ArrowLeft" -> {
@@ -56,6 +66,7 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
         for (row in 0 until state.config.rows) {
             for (col in 0 until state.config.columns) {
                 val shouldAnimate = state.lastMove == (row to col)
+                val ghost = if (showGhost && previewColumn == col && previewLandingRow == row) state.currentPlayer else null
                 key(row, col, if (shouldAnimate) state.board[row][col]?.name else "static") {
                     Cell(
                         row = row,
@@ -63,7 +74,9 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
                         player = state.board[row][col],
                         isWinning = (row to col) in state.winningCells,
                         animate = shouldAnimate,
-                        onClick = { onColumnClick(col) }
+                        ghostPlayer = ghost,
+                        onClick = { onColumnClick(col) },
+                        onHover = { hovered = col }
                     )
                 }
             }

@@ -7,7 +7,12 @@ import org.jetbrains.compose.web.dom.*
 import style.AppStyles
 
 @Composable
-fun Controls(config: GameConfig, onNewGame: (GameConfig) -> Unit) {
+fun Controls(
+    config: GameConfig,
+    canUndo: Boolean,
+    onNewGame: (GameConfig) -> Unit,
+    onUndo: () -> Unit
+) {
     var rows by remember(config) { mutableStateOf(config.rows) }
     var cols by remember(config) { mutableStateOf(config.columns) }
     var winLength by remember(config) { mutableStateOf(config.winLength) }
@@ -28,6 +33,12 @@ fun Controls(config: GameConfig, onNewGame: (GameConfig) -> Unit) {
                 onNewGame(GameConfig(r, c, w))
             }
         }) { Text("New Game") }
+        Button(attrs = {
+            classes(AppStyles.undoButton)
+            if (!canUndo) classes(AppStyles.undoDisabled)
+            if (!canUndo) attr("disabled", "true")
+            onClick { if (canUndo) onUndo() }
+        }) { Text("Undo") }
     }
 }
 

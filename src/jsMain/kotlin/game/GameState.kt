@@ -25,7 +25,8 @@ data class GameState(
     val currentPlayer: Player,
     val status: GameStatus,
     val winningCells: List<Pair<Int, Int>>,
-    val lastMove: Pair<Int, Int>? = null
+    val lastMove: Pair<Int, Int>? = null,
+    val previous: GameState? = null
 ) {
     fun dropPiece(col: Int): GameState {
         if (status != GameStatus.IN_PROGRESS) return this
@@ -55,9 +56,16 @@ data class GameState(
             currentPlayer = if (newStatus == GameStatus.IN_PROGRESS) currentPlayer.next() else currentPlayer,
             status = newStatus,
             winningCells = winCells,
-            lastMove = targetRow to col
+            lastMove = targetRow to col,
+            previous = this
         )
     }
+
+    fun undo(): GameState = previous ?: this
+
+    fun landingRow(col: Int): Int? = findLowestEmptyRow(col)
+
+    fun moveCount(): Int = board.sumOf { row -> row.count { it != null } }
 
     private fun findLowestEmptyRow(col: Int): Int? {
         for (row in config.rows - 1 downTo 0) {

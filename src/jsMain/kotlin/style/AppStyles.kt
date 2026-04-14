@@ -79,6 +79,33 @@ object AppStyles : StyleSheet() {
         property("user-select", "none")
     }
 
+    val cellGhost by style {
+        property("opacity", "0.4")
+    }
+
+    val undoButton by style {
+        property("min-height", "44px")
+        property("padding", "10px 18px")
+        property("font-size", "clamp(14px, 2.2vmin, 16px)")
+        property("font-weight", "bold")
+        backgroundColor(Color("#95a5a6"))
+        color(Color.white)
+        property("border", "none")
+        borderRadius(6.px)
+        property("cursor", "pointer")
+        property("box-sizing", "border-box")
+        media(mediaMaxWidth(600.px)) {
+            self style {
+                property("width", "100%")
+            }
+        }
+    }
+
+    val undoDisabled by style {
+        property("opacity", "0.5")
+        property("cursor", "not-allowed")
+    }
+
     val cellWinning by style {
         property("box-shadow", "0 0 12px 4px rgba(255, 255, 255, 0.8)")
         border(2.px, LineStyle.Solid, Color("#fff"))

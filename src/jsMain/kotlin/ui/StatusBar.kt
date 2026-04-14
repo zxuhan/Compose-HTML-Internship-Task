@@ -26,6 +26,6 @@ fun StatusBar(state: GameState) {
         attr("role", "status")
         attr("aria-live", "polite")
     }) {
-        Text(text)
+        Text("$text — Moves: ${state.moveCount()}")
     }
 }

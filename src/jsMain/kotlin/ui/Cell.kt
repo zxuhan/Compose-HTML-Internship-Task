@@ -14,32 +14,38 @@ fun Cell(
     player: Player?,
     isWinning: Boolean,
     animate: Boolean,
-    onClick: () -> Unit
+    ghostPlayer: Player? = null,
+    onClick: () -> Unit,
+    onHover: (() -> Unit)? = null
 ) {
     val stateLabel = when (player) {
         Player.RED -> "red"
         Player.YELLOW -> "yellow"
         null -> "empty"
     }
+    val isGhost = player == null && ghostPlayer != null
+    val displayed = player ?: ghostPlayer
     Div(attrs = {
         classes(AppStyles.cell)
         attr("role", "gridcell")
         attr("aria-label", "row ${row + 1} column ${col + 1} $stateLabel")
         onClick { onClick() }
+        if (onHover != null) onMouseEnter { onHover() }
     }) {
         Div(attrs = {
             classes(
                 AppStyles.cellInner,
-                when (player) {
+                when (displayed) {
                     Player.RED -> AppStyles.cellRed
                     Player.YELLOW -> AppStyles.cellYellow
                     null -> AppStyles.cellEmpty
                 }
             )
+            if (isGhost) classes(AppStyles.cellGhost)
             if (isWinning) classes(AppStyles.cellWinning)
             if (animate) classes(AppStyles.cellDrop)
         }) {
-            val glyph = when (player) {
+            val glyph = when (displayed) {
                 Player.RED -> "\u25CF"
                 Player.YELLOW -> "\u25B2"
                 null -> null
