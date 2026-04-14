@@ -75,6 +75,47 @@ class StorageTest {
     }
 
     @Test
+    fun outOfRangeRowsRejected() {
+        localStorage.setItem(
+            key,
+            """{"rows":100,"columns":7,"winLength":4,"board":[],"currentPlayer":"RED","status":"IN_PROGRESS","winningCells":[],"lastMove":null}"""
+        )
+        assertNull(Storage.load())
+        assertNull(localStorage.getItem(key))
+    }
+
+    @Test
+    fun outOfRangeWinLengthRejected() {
+        localStorage.setItem(
+            key,
+            """{"rows":6,"columns":7,"winLength":11,"board":[],"currentPlayer":"RED","status":"IN_PROGRESS","winningCells":[],"lastMove":null}"""
+        )
+        assertNull(Storage.load())
+        assertNull(localStorage.getItem(key))
+    }
+
+    @Test
+    fun boardSizeMismatchRejected() {
+        // rows=4 but board only has 2 rows
+        localStorage.setItem(
+            key,
+            """{"rows":4,"columns":4,"winLength":4,"board":[[null,null,null,null],[null,null,null,null]],"currentPlayer":"RED","status":"IN_PROGRESS","winningCells":[],"lastMove":null}"""
+        )
+        assertNull(Storage.load())
+        assertNull(localStorage.getItem(key))
+    }
+
+    @Test
+    fun unknownPlayerTokenRejected() {
+        localStorage.setItem(
+            key,
+            """{"rows":4,"columns":4,"winLength":4,"board":[[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null]],"currentPlayer":"BLUE","status":"IN_PROGRESS","winningCells":[],"lastMove":null}"""
+        )
+        assertNull(Storage.load())
+        assertNull(localStorage.getItem(key))
+    }
+
+    @Test
     fun redPieceColorSurvivesRoundTrip() {
         var state = GameState.initial()
         state = state.dropPiece(0)

@@ -36,36 +36,80 @@ object Storage {
 
     fun load(): GameState? {
         val json = localStorage.getItem(KEY) ?: return null
+        val parsed: dynamic = try {
+            JsJSON.parse(json)
+        } catch (_: Throwable) {
+            clear()
+            return null
+        }
         return try {
-            val obj: dynamic = JsJSON.parse(json)
-            val config = GameConfig(
-                rows = (obj.rows as Number).toInt(),
-                columns = (obj.columns as Number).toInt(),
-                winLength = (obj.winLength as Number).toInt()
-            )
-            val board: List<List<Player?>> = (obj.board as Array<Array<String?>>).map { row ->
-                row.map { cell ->
-                    when (cell) {
-                        "RED" -> Player.RED
-                        "YELLOW" -> Player.YELLOW
-                        else -> null
-                    }
-                }
-            }
-            val currentPlayer = Player.valueOf(obj.currentPlayer as String)
-            val status = GameStatus.valueOf(obj.status as String)
-            val winningCells: List<Pair<Int, Int>> = (obj.winningCells as Array<dynamic>).map { pair ->
-                (pair.row as Number).toInt() to (pair.col as Number).toInt()
-            }
-            val lastMove: Pair<Int, Int>? = if (obj.lastMove != null && obj.lastMove != undefined) {
-                (obj.lastMove.row as Number).toInt() to (obj.lastMove.col as Number).toInt()
-            } else null
-
-            GameState(config, board, currentPlayer, status, winningCells, lastMove)
+            parseState(parsed) ?: run { clear(); null }
         } catch (_: Throwable) {
             clear()
             null
         }
+    }
+
+    private fun parseState(obj: dynamic): GameState? {
+        val rows = (obj.rows as? Number)?.toInt() ?: return null
+        val columns = (obj.columns as? Number)?.toInt() ?: return null
+        val winLength = (obj.winLength as? Number)?.toInt() ?: return null
+        if (rows !in 4..15) return null
+        if (columns !in 4..15) return null
+        if (winLength !in 4..10) return null
+        if (winLength > minOf(rows, columns)) return null
+
+        val rawBoard = obj.board ?: return null
+        val boardArr = rawBoard as? Array<Array<String?>> ?: return null
+        if (boardArr.size != rows) return null
+        val board: List<List<Player?>> = boardArr.map { row ->
+            if (row.size != columns) return null
+            row.map { cell ->
+                when (cell) {
+                    null -> null
+                    "RED" -> Player.RED
+                    "YELLOW" -> Player.YELLOW
+                    else -> return null
+                }
+            }
+        }
+
+        val currentPlayer = when (obj.currentPlayer as? String) {
+            "RED" -> Player.RED
+            "YELLOW" -> Player.YELLOW
+            else -> return null
+        }
+        val status = when (obj.status as? String) {
+            "IN_PROGRESS" -> GameStatus.IN_PROGRESS
+            "RED_WINS" -> GameStatus.RED_WINS
+            "YELLOW_WINS" -> GameStatus.YELLOW_WINS
+            "DRAW" -> GameStatus.DRAW
+            else -> return null
+        }
+
+        val rawWinning = obj.winningCells as? Array<dynamic> ?: return null
+        val winningCells: List<Pair<Int, Int>> = rawWinning.map { pair ->
+            val r = (pair.row as? Number)?.toInt() ?: return null
+            val c = (pair.col as? Number)?.toInt() ?: return null
+            if (r !in 0 until rows || c !in 0 until columns) return null
+            r to c
+        }
+
+        val lastMove: Pair<Int, Int>? = if (obj.lastMove != null && obj.lastMove != undefined) {
+            val r = (obj.lastMove.row as? Number)?.toInt() ?: return null
+            val c = (obj.lastMove.col as? Number)?.toInt() ?: return null
+            if (r !in 0 until rows || c !in 0 until columns) return null
+            r to c
+        } else null
+
+        return GameState(
+            config = GameConfig(rows, columns, winLength),
+            board = board,
+            currentPlayer = currentPlayer,
+            status = status,
+            winningCells = winningCells,
+            lastMove = lastMove
+        )
     }
 
     fun clear() {
