@@ -8,6 +8,8 @@ A Kotlin/JS Connect Four built on Compose HTML — immutable state core, O(k) di
 ![Tests](https://img.shields.io/badge/tests-30%20passing-2ECC71)
 ![Platform](https://img.shields.io/badge/target-Kotlin%2FJS%20IR-F18E33)
 
+![Connect Four demo](demo.gif)
+
 ## Run
 
 ```bash
