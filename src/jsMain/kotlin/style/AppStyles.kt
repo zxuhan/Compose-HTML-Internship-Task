@@ -30,8 +30,8 @@ object AppStyles : StyleSheet() {
         property("gap", "clamp(2px, 0.5vmin, 6px)")
         property("padding", "clamp(4px, 1vmin, 10px)")
         property("border-radius", "clamp(4px, 1vmin, 10px)")
-        property("width", "clamp(280px, min(90vw, 70vh), 700px)")
-        overflow("hidden")
+        property("width", "max-content")
+        property("max-width", "100%")
         media(mediaMaxWidth(600.px)) {
             self style {
                 property("padding", "4px")
@@ -40,13 +40,10 @@ object AppStyles : StyleSheet() {
     }
 
     val cell by style {
-        property("aspect-ratio", "1")
         display(DisplayStyle.Flex)
         alignItems(AlignItems.Center)
         justifyContent(JustifyContent.Center)
         property("cursor", "pointer")
-        property("min-width", "36px")
-        property("min-height", "36px")
     }
 
     val cellInner by style {
@@ -197,9 +194,41 @@ object AppStyles : StyleSheet() {
         property("box-sizing", "border-box")
         media(mediaMaxWidth(600.px)) {
             self style {
+                property("flex", "1")
+                property("min-width", "0")
+                property("width", "auto")
+            }
+        }
+    }
+
+    val stepperRow by style {
+        display(DisplayStyle.Flex)
+        alignItems(AlignItems.Stretch)
+        property("gap", "6px")
+        media(mediaMaxWidth(600.px)) {
+            self style {
                 property("width", "100%")
             }
         }
+    }
+
+    val stepperButton by style {
+        property("min-width", "44px")
+        property("min-height", "44px")
+        property("font-size", "20px")
+        property("font-weight", "bold")
+        backgroundColor(Color("#3498db"))
+        color(Color.white)
+        property("border", "none")
+        borderRadius(6.px)
+        property("cursor", "pointer")
+        property("box-sizing", "border-box")
+        property("flex-shrink", "0")
+    }
+
+    val stepperButtonDisabled by style {
+        property("opacity", "0.5")
+        property("cursor", "not-allowed")
     }
 
     val newGameButton by style {

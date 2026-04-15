@@ -39,7 +39,19 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
             "Connect Four board, ${state.config.rows} rows by ${state.config.columns} columns, Connect ${state.config.winLength}"
         )
         style {
-            property("grid-template-columns", "repeat(${state.config.columns}, 1fr)")
+            val cols = state.config.columns
+            val rows = state.config.rows
+            val colGapReserve = (cols - 1) * 6
+            val rowGapReserve = (rows - 1) * 6
+            property(
+                "--cell",
+                "clamp(20px, min(" +
+                    "calc((100vw - 40px - ${colGapReserve}px) / $cols), " +
+                    "calc((85vh - 240px - ${rowGapReserve}px) / $rows)" +
+                    "), 64px)"
+            )
+            property("grid-template-columns", "repeat($cols, var(--cell))")
+            property("grid-template-rows", "repeat($rows, var(--cell))")
         }
         onFocus { focused = true }
         onBlur { focused = false }

@@ -55,32 +55,53 @@ private fun LabeledInput(
     max: Int,
     onValueChange: (Int) -> Unit
 ) {
+    var text by remember(value) { mutableStateOf(value.toString()) }
     var invalid by remember { mutableStateOf(false) }
-    var shakeTick by remember { mutableStateOf(0) }
+
     Div(attrs = { classes(AppStyles.controlGroup) }) {
         Span(attrs = { classes(AppStyles.controlLabel) }) { Text(label) }
-        key(shakeTick) {
-            Input(InputType.Number, attrs = {
+        Div(attrs = { classes(AppStyles.stepperRow) }) {
+            Button(attrs = {
+                classes(AppStyles.stepperButton)
+                if (value <= min) classes(AppStyles.stepperButtonDisabled)
+                attr("type", "button")
+                attr("aria-label", "Decrease $label")
+                if (value <= min) attr("disabled", "true")
+                onClick { if (value > min) onValueChange(value - 1) }
+            }) { Text("−") }
+            Input(InputType.Text, attrs = {
                 classes(AppStyles.controlInput)
                 if (invalid) classes(AppStyles.controlInputInvalid)
-                value(value)
-                attr("min", min.toString())
-                attr("max", max.toString())
+                value(text)
+                attr("inputmode", "numeric")
+                attr("pattern", "[0-9]*")
                 attr("aria-label", ariaLabel)
                 onInput { event ->
-                    val raw = event.value?.toInt()
-                    if (raw != null) {
-                        val coerced = raw.coerceIn(min, max)
-                        if (raw != coerced) {
-                            invalid = true
-                            shakeTick++
-                        } else {
-                            invalid = false
-                        }
-                        onValueChange(coerced)
+                    val raw = event.value
+                    text = raw
+                    val parsed = raw.toIntOrNull()
+                    if (parsed == null || parsed < min || parsed > max) {
+                        invalid = true
+                    } else {
+                        invalid = false
+                        onValueChange(parsed)
                     }
                 }
+                onBlur {
+                    val clamped = (text.toIntOrNull() ?: min).coerceIn(min, max)
+                    text = clamped.toString()
+                    invalid = false
+                    onValueChange(clamped)
+                }
             })
+            Button(attrs = {
+                classes(AppStyles.stepperButton)
+                if (value >= max) classes(AppStyles.stepperButtonDisabled)
+                attr("type", "button")
+                attr("aria-label", "Increase $label")
+                if (value >= max) attr("disabled", "true")
+                onClick { if (value < max) onValueChange(value + 1) }
+            }) { Text("+") }
         }
         Span(attrs = { classes(AppStyles.controlHint) }) { Text(hint) }
     }
