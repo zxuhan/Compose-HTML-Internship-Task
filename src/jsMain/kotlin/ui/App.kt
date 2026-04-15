@@ -37,15 +37,17 @@ fun App() {
         )
         StatusBar(state = gameState)
         MoveAnnouncer(state = gameState)
-        Board(
-            state = gameState,
-            onColumnClick = { col ->
-                val newState = gameState.dropPiece(col)
-                if (newState !== gameState) {
-                    if (newState.board !== gameState.board) Storage.save(newState)
-                    gameState = newState
+        Div(attrs = { classes(AppStyles.boardArea) }) {
+            Board(
+                state = gameState,
+                onColumnClick = { col ->
+                    val newState = gameState.dropPiece(col)
+                    if (newState !== gameState) {
+                        if (newState.board !== gameState.board) Storage.save(newState)
+                        gameState = newState
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

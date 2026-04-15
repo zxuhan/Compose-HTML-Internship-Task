@@ -41,14 +41,14 @@ fun Board(state: GameState, onColumnClick: (Int) -> Unit) {
         style {
             val cols = state.config.columns
             val rows = state.config.rows
-            val colGapReserve = (cols - 1) * 6
-            val rowGapReserve = (rows - 1) * 6
+            val colChrome = 20 + (cols - 1) * 6
+            val rowChrome = 20 + (rows - 1) * 6
             property(
                 "--cell",
-                "clamp(20px, min(" +
-                    "calc((100vw - 40px - ${colGapReserve}px) / $cols), " +
-                    "calc((85vh - 240px - ${rowGapReserve}px) / $rows)" +
-                    "), 64px)"
+                "clamp(16px, min(" +
+                    "calc((100cqw - ${colChrome}px) / $cols), " +
+                    "calc((100cqh - ${rowChrome}px) / $rows)" +
+                    "), 72px)"
             )
             property("grid-template-columns", "repeat($cols, var(--cell))")
             property("grid-template-rows", "repeat($rows, var(--cell))")

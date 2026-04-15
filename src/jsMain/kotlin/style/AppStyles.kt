@@ -10,7 +10,7 @@ object AppStyles : StyleSheet() {
         alignItems(AlignItems.Center)
         property("font-family", "'Segoe UI', system-ui, sans-serif")
         property("padding", "clamp(8px, 2vmin, 24px)")
-        property("min-height", "100vh")
+        property("min-height", "100dvh")
         property("box-sizing", "border-box")
     }
 
@@ -24,19 +24,26 @@ object AppStyles : StyleSheet() {
         }
     }
 
+    val boardArea by style {
+        property("container-type", "size")
+        property("flex", "1 1 0")
+        property("min-height", "55dvh")
+        property("align-self", "stretch")
+        display(DisplayStyle.Flex)
+        alignItems(AlignItems.Center)
+        justifyContent(JustifyContent.Center)
+        property("width", "100%")
+        property("padding", "8px 0")
+        property("box-sizing", "border-box")
+    }
+
     val board by style {
         display(DisplayStyle.Grid)
         backgroundColor(Color("#1a5276"))
-        property("gap", "clamp(2px, 0.5vmin, 6px)")
-        property("padding", "clamp(4px, 1vmin, 10px)")
-        property("border-radius", "clamp(4px, 1vmin, 10px)")
-        property("width", "max-content")
-        property("max-width", "100%")
-        media(mediaMaxWidth(600.px)) {
-            self style {
-                property("padding", "4px")
-            }
-        }
+        property("gap", "6px")
+        property("padding", "10px")
+        property("border-radius", "10px")
+        property("box-sizing", "border-box")
     }
 
     val cell by style {
